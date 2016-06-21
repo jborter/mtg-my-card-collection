@@ -12,7 +12,18 @@
     </style>
 </head>
 <body>
-<div class="container">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="http://localhost:8080/mtg">Card Catalogue</a></li>
+                <li class="active"><a href="http://localhost:8082/collection">My Awesome Collection</a></li>
+                <li><a href="http://localhost:8083/price">Price updater</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container top-container">
     <h1 class="page-header">My Magic Collection</h1>
     <h2>Add cards to collection</h2>
 
@@ -52,7 +63,7 @@
         <tbody >
             <i th:each="card : ${myCollection}" th:remove="tag">
                 <tr th:each="edition : ${card.editions}">
-                    <td><a th:href="${'http://localhost:8080/cards/' + card.id}" th:text="${card.name}"/></td>
+                    <td><a th:href="${'http://localhost:8080/mtg/' + card.id}" th:text="${card.name}"/></td>
                     <td th:text="${edition.id}"/>
                     <td th:text="${edition.numberOfCards}"/>
                 </tr>
@@ -86,7 +97,7 @@
                 $('#editionSelectionArea').removeClass('hidden');
                 $('#edition').find('option').remove().end();
                 $('#cardHref')
-                        .attr('href', card._links.self.href)
+                        .attr('href', 'http://localhost:8080/mtg/' + card.id)
                         .text(card.name);
                 $('#selectedCardId').val(card.id);
 
