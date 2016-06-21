@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <script type="text/javascript" th:src="@{/js/jquery-2.2.4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.autocomplete-1.2.25.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/mtg.css}" />
+    <title>My Magic Collection</title>
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="page-header">My Magic Collection</h1>
+    <h2>Add cards to collection</h2>
+
+    <form action="#" th:action="@{/collection}" th:object="${card}" method="post">
+        <div class="form-group">
+            <label for="searchfield">Card</label>
+            <input type="text" class="form-control" id="searchfield" placeholder="Card name"/>
+        </div>
+        <div id="editionSelectionArea" class="hidden">
+            <div class="form-group">
+                <label for="cardHref">Selected </label>
+                <a id="cardHref"></a>
+            </div>
+            <div class="form-group">
+                <label for="edition">Edition</label>
+                <select class="form-control" id="edition" placeholder="Choose edition" th:field="*{editionId}"/>
+            </div>
+            <div class="form-group">
+                <label for="numberOfCards">How many cards?</label>
+                <input type="text" class="form-control" id="numberOfCards" placeholder="" th:field="*{numberOfCards}"/>
+            </div>
+            <input type="hidden" id="selectedCardId" th:field="*{cardId}"/>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary pull-right">Add to my collection</button>
+            </div>
+        </div>
+    </form>
+
+    <h2 style="padding-top: 50px;">My collection</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <th>Name</th>
+            <th>Edition</th>
+            <th>Number of Cards</th>
+        </thead>
+        <tbody >
+            <i th:each="card : ${myCollection}" th:remove="tag">
+                <tr th:each="edition : ${card.editions}">
+                    <td th:text="${card.name}"/>
+                    <td th:text="${edition.id}"/>
+                    <td th:text="${edition.numberOfCards}"/>
+                </tr>
+            </i>
+        </tbody>
+    </table>
+
+</div>
+<script type="application/javascript">
+    jQuery(function () {
+        $('#searchfield').autocomplete({
+            serviceUrl: 'http://localhost:8080/cards/search/findByNameIgnoreCaseLike',
+            paramName: "name",
+            minChars: 2,
+            maxHeight: 'none',
+            transformResult: function (response) {
+                var cards = $.parseJSON(response)._embedded.cards.map(function(card) {
+                    return {
+                        "value": card.name,
+                        "data": card
+                    }
+                });
+                return {
+                    "suggestions": cards
+                }
+            },
+            onSelect: function (suggestion) {
+
+                var card = suggestion.data;
+
+                $('#editionSelectionArea').removeClass('hidden');
+                $('#edition').find('option').remove().end();
+                $('#cardHref')
+                        .attr('href', card._links.self.href)
+                        .text(card.name);
+                $('#selectedCardId').val(card.id);
+
+                var editions = card.editions.sort(function(a, b) {
+                    return a.set.toLowerCase().localeCompare(b.set.toLowerCase());
+                });
+                $.each(editions, function(index, edition) {
+                    $('#edition').append( new Option(edition.set, edition.id) );
+                });
+            }
+        })
+    });
+</script>
+</body>
+</html>
