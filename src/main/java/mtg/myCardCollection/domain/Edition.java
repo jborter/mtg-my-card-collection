@@ -5,12 +5,13 @@ package mtg.myCardCollection.domain;
  */
 public class Edition {
 
-    Edition() {
+    public Edition() {
     }
 
     private String id;
+    private String name;
     private int numberOfCards;
-    private Price[] prices;
+    private Price price;
 
     public String getId() {
         return id;
@@ -20,12 +21,12 @@ public class Edition {
         this.id = id;
     }
 
-    public Price[] getPrices() {
-        return prices;
+    public Price getPrice() {
+        return price == null ? new Price() : price;
     }
 
-    public void setPrices(Price[] prices) {
-        this.prices = prices;
+    public void setPrice(Price price) {
+        this.price = price;
     }
 
     public int getNumberOfCards() {
@@ -34,5 +35,13 @@ public class Edition {
 
     void setNumberOfCards(int numberOfCards) {
         this.numberOfCards = numberOfCards;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

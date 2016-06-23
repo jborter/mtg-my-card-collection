@@ -59,13 +59,15 @@
             <th>Name</th>
             <th>Edition</th>
             <th>Number of Cards</th>
+            <th>Current Price</th>
         </thead>
         <tbody >
             <i th:each="card : ${myCollection}" th:remove="tag">
                 <tr th:each="edition : ${card.editions}">
                     <td><a th:href="${'http://localhost:8080/mtg/' + card.id}" th:text="${card.name}"/></td>
-                    <td th:text="${edition.id}"/>
+                    <td th:text="${edition.name}"/>
                     <td th:text="${edition.numberOfCards}"/>
+                    <td th:text="${'low: ' + edition.price.low + ', median: ' + edition.price.median + ', high: ' + edition.price.high}"/>
                 </tr>
             </i>
         </tbody>
@@ -75,7 +77,7 @@
 <script type="application/javascript">
     jQuery(function () {
         $('#searchfield').autocomplete({
-            serviceUrl: 'http://localhost:8080/cards/search/findByNameIgnoreCaseLike',
+            serviceUrl: 'http://localhost:8080/cards/search/findByName',
             paramName: "name",
             minChars: 2,
             maxHeight: 'none',
@@ -105,7 +107,7 @@
                     return a.set.toLowerCase().localeCompare(b.set.toLowerCase());
                 });
                 $.each(editions, function(index, edition) {
-                    $('#edition').append( new Option(edition.set, edition.id) );
+                    $('#edition').append( new Option(edition.set, edition.set_id) );
                 });
             }
         })

@@ -57,23 +57,28 @@ public class Card {
         return editions == null ? new Edition[0] : editions;
     }
 
+    public void addEdition(Edition edition) {
+        List<Edition> editions = new ArrayList<>(Arrays.asList(getEditions()));
+        editions.add(edition);
+        this.editions = editions.toArray(new Edition[0]);
+    }
+
+    public boolean hasEdition(String editionId) {
+        return Stream
+                .of(getEditions())
+                .filter(e -> e.getId().equals(editionId))
+                .findFirst()
+                .isPresent();
+    }
+
     public void setNumberOfCards(String editionId, int numberOfCards) {
 
-        Optional<Edition> existingEdition = Stream
+        Edition edition = Stream
                 .of(getEditions())
-                .filter(edition -> edition.getId().equals(editionId))
-                .findFirst();
+                .filter(e -> e.getId().equals(editionId))
+                .findFirst()
+                .get();
 
-        if (existingEdition.isPresent()) {
-            existingEdition.get().setNumberOfCards(numberOfCards);
-        } else {
-            Edition edition = new Edition();
-            edition.setId(editionId);
-            edition.setNumberOfCards(numberOfCards);
-
-            List<Edition> editions = new ArrayList<>(Arrays.asList(getEditions()));
-            editions.add(edition);
-            this.editions = editions.toArray(new Edition[0]);
-        }
+        edition.setNumberOfCards(numberOfCards);
     }
 }

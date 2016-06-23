@@ -36,7 +36,7 @@ public class CollectionController {
 
     @RequestMapping(value="/collection", method = RequestMethod.POST)
     public String addCardToCollection(@ModelAttribute CardModel card, Model model) {
-        Card collectedCard = loadCardFromCollectionOrCatalogue(card.getCardId());
+        Card collectedCard = loadCardFromCollectionOrCatalogue(card.getCardId(), card.getEditionId());
         collectedCard.setNumberOfCards(card.getEditionId(), card.getNumberOfCards());
         cardCollectionRepository.save(Arrays.asList(collectedCard));
         model.addAttribute("card", new CardModel());
@@ -44,12 +44,15 @@ public class CollectionController {
         return COLLECTION_TEMPLATE;
     }
 
-    private Card loadCardFromCollectionOrCatalogue (String cardId) {
+    private Card loadCardFromCollectionOrCatalogue (String cardId, String editionId) {
         Card collectedCard = cardCollectionRepository.findOne(cardId);
         if (collectedCard != null) {
+            if (!collectedCard.hasEdition(editionId)) {
+                collectedCard.addEdition(cardCatalogue.getCardEdition(cardId, editionId));
+            }
             return collectedCard;
         } else {
-            return cardCatalogue.getCard(cardId);
+            return cardCatalogue.getCard(cardId, editionId);
         }
     }
 }
