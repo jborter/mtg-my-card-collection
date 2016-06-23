@@ -27,7 +27,7 @@
     <h1 class="page-header">My Magic Collection</h1>
     <h2>Add cards to collection</h2>
 
-    <form th:action="@{/mtg-my-card-collection}" th:object="${card}" method="post">
+    <form th:action="@{/}" th:object="${card}" method="post">
         <div class="form-group">
             <label for="searchfield">Card</label>
             <input type="text" class="form-control" id="searchfield" placeholder="Card name"/>
@@ -64,8 +64,9 @@
             <i th:each="card : ${myCollection}" th:remove="tag">
                 <tr th:each="edition : ${card.editions}">
                     <td><a th:href="${'http://localhost:8080/mtg-card-catalogue/' + card.id}" th:text="${card.name}"/></td>
-                    <td th:text="${edition.id}"/>
+                    <td th:text="${edition.name}"/>
                     <td th:text="${edition.numberOfCards}"/>
+                    <td th:text="${'low: ' + edition.price.low + ', median: ' + edition.price.median + ', high: ' + edition.price.high}"/>
                 </tr>
             </i>
         </tbody>
@@ -75,7 +76,7 @@
 <script type="application/javascript">
     jQuery(function () {
         $('#searchfield').autocomplete({
-            serviceUrl: 'http://localhost:8084/mtg-card-catalogue/cards/search/findByNameIgnoreCaseLike',
+            serviceUrl: 'http://localhost:8084/mtg-card-catalogue/cards/search/findByName',
             paramName: "name",
             minChars: 2,
             maxHeight: 'none',
@@ -105,7 +106,7 @@
                     return a.set.toLowerCase().localeCompare(b.set.toLowerCase());
                 });
                 $.each(editions, function(index, edition) {
-                    $('#edition').append( new Option(edition.set, edition.id) );
+                    $('#edition').append( new Option(edition.set, edition.set_id) );
                 });
             }
         })
