@@ -1,6 +1,10 @@
 package mtg.myCardCollection.cardCatalogue;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.netflix.ribbon.RibbonClient;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,13 +17,13 @@ import java.util.stream.Stream;
 @Service
 public class CardCatalogue {
 
-    @Value("${mtg.cardCatalogueHost}")
-    private String cardCatalogueHost;
+    private static final String CARD_CATALOGUE_SERVICE_ID = "mtg-card-catalogue";
 
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     public mtg.myCardCollection.domain.Card getCard(String cardId, String editionId) {
-        Card card = restTemplate.getForObject(cardCatalogueHost + "/" + cardId, Card.class);
+        Card card = restTemplate.getForObject("http://" + CARD_CATALOGUE_SERVICE_ID + "/mtg-card-catalogue/cards/" + cardId, Card.class);
 
         mtg.myCardCollection.domain.Card collectedCard = new mtg.myCardCollection.domain.Card();
         collectedCard.setId(card.getId());
@@ -42,7 +46,7 @@ public class CardCatalogue {
     }
 
     public mtg.myCardCollection.domain.Edition getCardEdition(String cardId, String editionId) {
-        Card card = restTemplate.getForObject(cardCatalogueHost + "/" + cardId, Card.class);
+        Card card = restTemplate.getForObject("http://" + CARD_CATALOGUE_SERVICE_ID + "/mtg-card-catalogue/cards/" + cardId, Card.class);
         return getCardEdition(card, editionId);
     }
 }

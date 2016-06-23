@@ -1,10 +1,6 @@
 server:
   port: 8082
 
-spring:
-  application:
-    name: mtg-my-card-collection
-
 eureka:
   client:
     serviceUrl:
