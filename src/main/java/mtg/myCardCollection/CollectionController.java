@@ -27,14 +27,14 @@ public class CollectionController {
     @Autowired
     private CardCollectionRepository cardCollectionRepository;
 
-    @RequestMapping(value="/collection", method = RequestMethod.GET)
+    @RequestMapping(value="/", method = RequestMethod.GET)
     public String getCards(Model model) {
         model.addAttribute("card", new CardModel());
         model.addAttribute("myCollection", cardCollectionRepository.findAll());
         return COLLECTION_TEMPLATE;
     }
 
-    @RequestMapping(value="/collection", method = RequestMethod.POST)
+    @RequestMapping(value="/", method = RequestMethod.POST)
     public String addCardToCollection(@ModelAttribute CardModel card, Model model) {
         Card collectedCard = loadCardFromCollectionOrCatalogue(card.getCardId());
         collectedCard.setNumberOfCards(card.getEditionId(), card.getNumberOfCards());
