@@ -27,7 +27,7 @@
     <h1 class="page-header">My Magic Collection</h1>
     <h2>Add cards to collection</h2>
 
-    <form th:action="@{/mtg-my-card-collection}" th:object="${card}" method="post">
+    <form th:action="@{/}" th:object="${card}" method="post">
         <div class="form-group">
             <label for="searchfield">Card</label>
             <input type="text" class="form-control" id="searchfield" placeholder="Card name"/>
