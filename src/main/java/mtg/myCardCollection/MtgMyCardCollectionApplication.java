@@ -9,7 +9,6 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 public class MtgMyCardCollectionApplication {
 
 	public static void main(String[] args) {
-		SpringApplication notificationMicroService = new SpringApplication(MtgMyCardCollectionApplication.class);
-		notificationMicroService.run(args);
+		new SpringApplication(MtgMyCardCollectionApplication.class).run(args);
 	}
 }

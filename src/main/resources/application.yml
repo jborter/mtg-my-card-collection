@@ -1,5 +1,11 @@
 server:
   port: 8082
+  context-path: /mtg-my-card-collection
+
+spring:
+  data:
+    mongodb:
+      port: 28017
 
 eureka:
   client:
